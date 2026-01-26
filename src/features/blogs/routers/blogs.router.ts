@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createBlogHandler } from "./handlers/blogs.create-handler";
-import { getBlogListHandler } from "./handlers/blogs.get-list-handler";
-import { getBlogHandler } from "./handlers/blogs.get-handler";
-import { updateBlogHandler } from "./handlers/blogs.update-handler";
-import { deleteBlogHandler } from "./handlers/blogs.delete-handler";
+import { createBlogHandler } from "./handlers/blogs.create.handler";
+import { getBlogListHandler } from "./handlers/blogs.get-list.handler";
+import { getBlogHandler } from "./handlers/blogs.get.handler";
+import { updateBlogHandler } from "./handlers/blogs.update.handler";
+import { deleteBlogHandler } from "./handlers/blogs.delete.handler";
 import { blogInputDtoValidation } from "../validation/blogs.input-dto.validation.middleware";
 import { idValidation } from "../../../core/middlewares/params-id-validation.middleware";
 import { inputValidationResultMiddleware } from "../../../core/middlewares/input-validation-result.middleware";

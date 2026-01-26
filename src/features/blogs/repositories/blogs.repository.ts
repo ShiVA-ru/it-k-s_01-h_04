@@ -4,31 +4,27 @@ import { BlogDb } from "../types/blogs.db.type";
 import { BlogInput } from "../types/blogs.input.type";
 
 export const blogsRepository = {
-  async create(dto: BlogInput): Promise<WithId<BlogDb>> {
-    const newEntity: BlogDb = {
-      name: dto.name,
-      description: dto.description,
-      websiteUrl: dto.websiteUrl,
-      createdAt: new Date().toISOString(),
-      isMembership: false,
-    };
+  async create(dto: BlogDb): Promise<string> {
+    const result = await blogsCollection.insertOne(dto);
 
-    const result = await blogsCollection.insertOne(newEntity);
-
-    const insertedId = result.insertedId;
-
-    return { ...newEntity, _id: insertedId };
+    return result.insertedId.toString();
   },
 
   async findAll(): Promise<WithId<BlogDb>[]> {
     return blogsCollection.find().toArray();
   },
 
-  async findOneById(id: string): Promise<WithId<BlogDb> | null> {
-    return blogsCollection.findOne({ _id: new ObjectId(id) });
+  async findOneById(_id: ObjectId): Promise<WithId<BlogDb>> {
+    const res = await blogsCollection.findOne({ _id });
+
+    if (!res) {
+      throw new Error("Blog not found");
+    }
+
+    return res;
   },
 
-  async updateById(id: string, dto: BlogInput): Promise<Boolean> {
+  async updateById(id: ObjectId, dto: BlogInput): Promise<void> {
     const updateResult = await blogsCollection.updateOne(
       { _id: new ObjectId(id) },
       {
@@ -41,15 +37,15 @@ export const blogsRepository = {
     );
 
     if (updateResult.matchedCount < 1) {
-      return false;
+      throw new Error("Blog not found");
     }
 
-    return true;
+    return;
   },
 
-  async deleteById(id: string): Promise<void> {
+  async deleteById(_id: ObjectId): Promise<void> {
     const deleteResult = await blogsCollection.deleteOne({
-      _id: new ObjectId(id),
+      _id,
     });
 
     if (deleteResult.deletedCount < 1) {

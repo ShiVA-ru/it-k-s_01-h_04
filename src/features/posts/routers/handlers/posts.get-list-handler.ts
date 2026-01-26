@@ -10,16 +10,8 @@ export async function getPostListHandler(
   res: Response<PostView[]>,
 ) {
   const findEntity = await postsRepository.findAll();
-  const blogs = await blogsRepository.findAll();
-  const blogsIdsNames = new Map(
-    blogs.map((blog) => [blog._id.toString(), blog.name]),
-  );
 
   res
     .status(HttpStatus.Ok)
-    .json(
-      findEntity.map((post) =>
-        mapEntityToViewModel(post, blogsIdsNames.get(post.blogId) ?? ""),
-      ),
-    );
+    .json(findEntity.map((post) => mapEntityToViewModel(post)));
 }
