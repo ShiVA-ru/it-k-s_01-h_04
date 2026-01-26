@@ -1,11 +1,11 @@
 import { ObjectId, WithId } from "mongodb";
-import { PostDbModel } from "../models/PostDbModel";
-import { PostInputModel } from "../models/PostInputModel";
+import { PostDb } from "../types/posts.db.type";
+import { PostInput } from "../types/posts.input.type";
 import { postsCollection } from "../../../db/mongo";
 
 export const postsRepository = {
-  async create(dto: PostInputModel): Promise<WithId<PostDbModel>> {
-    const newEntity: PostDbModel = {
+  async create(dto: PostInput): Promise<WithId<PostDb>> {
+    const newEntity: PostDb = {
       title: dto.title,
       shortDescription: dto.shortDescription,
       content: dto.content,
@@ -20,15 +20,15 @@ export const postsRepository = {
     return { ...newEntity, _id: insertedId };
   },
 
-  async findAll(): Promise<WithId<PostDbModel>[]> {
+  async findAll(): Promise<WithId<PostDb>[]> {
     return postsCollection.find().toArray();
   },
 
-  async findOneById(id: string): Promise<WithId<PostDbModel> | null> {
+  async findOneById(id: string): Promise<WithId<PostDb> | null> {
     return postsCollection.findOne({ _id: new ObjectId(id) });
   },
 
-  async updateById(id: string, dto: PostInputModel): Promise<Boolean> {
+  async updateById(id: string, dto: PostInput): Promise<Boolean> {
     const updateResult = await postsCollection.updateOne(
       { _id: new ObjectId(id) },
       {

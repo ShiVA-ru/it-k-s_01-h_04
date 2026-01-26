@@ -1,11 +1,11 @@
 import { ObjectId, WithId } from "mongodb";
 import { blogsCollection } from "../../../db/mongo";
-import { BlogDbModel } from "../models/BlogDbModel";
-import { BlogInputModel } from "../models/BlogInputModel";
+import { BlogDb } from "../types/blogs.db.type";
+import { BlogInput } from "../types/blogs.input.type";
 
 export const blogsRepository = {
-  async create(dto: BlogInputModel): Promise<WithId<BlogDbModel>> {
-    const newEntity: BlogDbModel = {
+  async create(dto: BlogInput): Promise<WithId<BlogDb>> {
+    const newEntity: BlogDb = {
       name: dto.name,
       description: dto.description,
       websiteUrl: dto.websiteUrl,
@@ -20,15 +20,15 @@ export const blogsRepository = {
     return { ...newEntity, _id: insertedId };
   },
 
-  async findAll(): Promise<WithId<BlogDbModel>[]> {
+  async findAll(): Promise<WithId<BlogDb>[]> {
     return blogsCollection.find().toArray();
   },
 
-  async findOneById(id: string): Promise<WithId<BlogDbModel> | null> {
+  async findOneById(id: string): Promise<WithId<BlogDb> | null> {
     return blogsCollection.findOne({ _id: new ObjectId(id) });
   },
 
-  async updateById(id: string, dto: BlogInputModel): Promise<Boolean> {
+  async updateById(id: string, dto: BlogInput): Promise<Boolean> {
     const updateResult = await blogsCollection.updateOne(
       { _id: new ObjectId(id) },
       {

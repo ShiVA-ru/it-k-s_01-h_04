@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { createBlogHandler } from "./handlers/createBlogHandler";
-import { getBlogListHandler } from "./handlers/getBlogListHandler";
-import { getBlogHandler } from "./handlers/getBlogHandler";
-import { updateBlogHandler } from "./handlers/updateBlogHandler";
-import { deleteBlogHandler } from "./handlers/deleteBlogHandler";
-import { blogInputDtoValidation } from "../validation/blogs.input-dto.validation-middleware";
-import { idValidation } from "../../../core/middlewares/params-id.validation-middleware";
-import { inputValidationResultMiddleware } from "../../../core/middlewares/input-validtion-result.middleware";
-import { superAdminGuardMiddleware } from "../../../auth/middlewares/super-admin.guard-middleware";
+import { createBlogHandler } from "./handlers/blogs.create-handler";
+import { getBlogListHandler } from "./handlers/blogs.get-list-handler";
+import { getBlogHandler } from "./handlers/blogs.get-handler";
+import { updateBlogHandler } from "./handlers/blogs.update-handler";
+import { deleteBlogHandler } from "./handlers/blogs.delete-handler";
+import { blogInputDtoValidation } from "../validation/blogs.input-dto.validation.middleware";
+import { idValidation } from "../../../core/middlewares/params-id-validation.middleware";
+import { inputValidationResultMiddleware } from "../../../core/middlewares/input-validation-result.middleware";
+import { superAdminGuardMiddleware } from "../../../auth/middlewares/super-admin.guard.middleware";
 
 export const blogsRouter = Router();
 

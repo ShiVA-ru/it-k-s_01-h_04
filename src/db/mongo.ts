@@ -1,18 +1,18 @@
 import { Collection, Db, MongoClient } from "mongodb";
-import { BlogDbModel } from "../features/blogs/models/BlogDbModel";
-import { PostDbModel } from "../features/posts/models/PostDbModel";
+import { BlogDb } from "../features/blogs/types/blogs.db.type";
+import { PostDb } from "../features/posts/types/posts.db.type";
 import config from "../core/settings/config";
 
 export let client: MongoClient;
-export let blogsCollection: Collection<BlogDbModel>;
-export let postsCollection: Collection<PostDbModel>;
+export let blogsCollection: Collection<BlogDb>;
+export let postsCollection: Collection<PostDb>;
 
 export async function runDB(url: string) {
   client = new MongoClient(url);
   const db: Db = client.db(config.dbName);
 
-  blogsCollection = db.collection<BlogDbModel>(config.blogCollectionName);
-  postsCollection = db.collection<PostDbModel>(config.postCollectionName);
+  blogsCollection = db.collection<BlogDb>(config.blogCollectionName);
+  postsCollection = db.collection<PostDb>(config.postCollectionName);
 
   try {
     await client.connect();
@@ -21,6 +21,15 @@ export async function runDB(url: string) {
   } catch (error) {
     await client.close();
     throw new Error(`❌ Database not connected: ${error}`);
+  }
+}
+
+export async function closeDB() {
+  try {
+    await client.close();
+    console.log("✅ Database connection closed");
+  } catch (error) {
+    console.error("❌ Error closing database:", error);
   }
 }
 
