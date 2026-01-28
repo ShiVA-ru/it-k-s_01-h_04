@@ -17,5 +17,6 @@ export async function updateBlogHandler(
     res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
     console.log(error);
+    res.sendStatus(HttpStatus.NotFound);
   }
 }

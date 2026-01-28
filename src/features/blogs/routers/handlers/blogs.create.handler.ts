@@ -4,10 +4,7 @@ import { BlogInput } from "../../types/blogs.input.type";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
 import { BlogView } from "../../types/blogs.view.type";
 import { mapEntityToViewModel } from "../mappers/blogs.entity-map";
-import { blogsRepository } from "../../repositories/blogs.repository";
-import { ObjectId } from "mongodb";
 import { validationErrorType } from "../../../../core/types/errors.types";
-import { createErrorMessages } from "../../../../core/middlewares/input-validation-result.middleware";
 import { blogsService } from "../../application/blogs.service";
 
 export async function createBlogHandler(
@@ -22,6 +19,7 @@ export async function createBlogHandler(
     res.status(HttpStatus.Created).json(mapEntityToViewModel(createdEntity));
   } catch (error) {
     console.error(error);
+    res.sendStatus(HttpStatus.InternalServerError);
     // res.status(HttpStatus.InternalServerError).json(
     //   createErrorMessages({
     //     field: "message",

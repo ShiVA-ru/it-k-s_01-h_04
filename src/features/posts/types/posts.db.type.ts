@@ -4,5 +4,5 @@ export type PostDb = {
   content: string;
   blogId: string;
   blogName: string;
-  createdAt: string;
+  createdAt?: string;
 };

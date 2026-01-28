@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpStatus } from "../../core/types/http-statuses.types";
 import config from "../../core/settings/config";
+import { log } from "node:console";
 
 export const superAdminGuardMiddleware = (
   req: Request,

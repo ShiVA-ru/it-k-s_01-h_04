@@ -2,61 +2,78 @@ import { ObjectId, WithId } from "mongodb";
 import { PostDb } from "../types/posts.db.type";
 import { PostInput } from "../types/posts.input.type";
 import { postsCollection } from "../../../db/mongo";
+import { PaginationAndSorting } from "../../../core/types/pagination-and-sorting.type";
+import { PostSortFields } from "../validation/posts.query.validation.middleware";
+import { PostsQueryInput } from "../types/posts.query.type";
 
 export const postsRepository = {
-  async create(dto: PostInput, blogName: string): Promise<WithId<PostDb>> {
-    const newEntity: PostDb = {
-      title: dto.title,
-      shortDescription: dto.shortDescription,
-      content: dto.content,
-      blogId: dto.blogId,
-      createdAt: new Date().toISOString(),
-      blogName: blogName,
+  async create(dto: PostDb): Promise<string> {
+    const result = await postsCollection.insertOne(dto);
+
+    return result.insertedId.toString();
+  },
+
+  async findAll(queryDto: PostsQueryInput): Promise<{
+    items: WithId<PostDb>[];
+    totalCount: number;
+  }> {
+    const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+
+    const skip = (pageNumber - 1) * pageSize;
+
+    const sort: Record<string, 1 | -1> = {
+      [sortBy]: sortDirection === "asc" ? 1 : -1,
     };
 
-    const result = await postsCollection.insertOne(newEntity);
+    const items = await postsCollection
+      .find()
+      .skip(skip)
+      .limit(pageSize)
+      .sort(sort)
+      .toArray();
 
-    const insertedId = result.insertedId;
+    const totalCount = await postsCollection.countDocuments();
 
-    return { ...newEntity, _id: insertedId };
+    return {
+      items,
+      totalCount,
+    };
   },
 
-  async findAll(): Promise<WithId<PostDb>[]> {
-    return postsCollection.find().toArray();
+  async findOneById(_id: ObjectId): Promise<WithId<PostDb>> {
+    const res = await postsCollection.findOne({ _id });
+
+    if (!res) {
+      throw new Error("Post not exist");
+    }
+
+    return res;
   },
 
-  async findOneById(id: string): Promise<WithId<PostDb> | null> {
-    return postsCollection.findOne({ _id: new ObjectId(id) });
-  },
-
-  async updateById(
-    id: string,
-    dto: PostInput,
-    blogName: string,
-  ): Promise<Boolean> {
+  async updateById(_id: ObjectId, dto: PostDb): Promise<void> {
     const updateResult = await postsCollection.updateOne(
-      { _id: new ObjectId(id) },
+      { _id },
       {
         $set: {
           title: dto.title,
           shortDescription: dto.shortDescription,
           content: dto.content,
           blogId: dto.blogId,
-          blogName,
+          blogName: dto.blogName,
         },
       },
     );
 
     if (updateResult.matchedCount < 1) {
-      return false;
+      throw new Error("Blog not found");
     }
 
-    return true;
+    return;
   },
 
-  async deleteById(id: string): Promise<void> {
+  async deleteById(_id: ObjectId): Promise<void> {
     const deleteResult = await postsCollection.deleteOne({
-      _id: new ObjectId(id),
+      _id,
     });
 
     if (deleteResult.deletedCount < 1) {
