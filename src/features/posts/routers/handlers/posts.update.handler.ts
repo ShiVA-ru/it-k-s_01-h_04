@@ -4,11 +4,7 @@ import { PostInput } from "../../types/posts.input.type";
 import { PostView } from "../../types/posts.view.type";
 import { validationErrorsDto } from "../../../../core/types/errors.types";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
-import { postsRepository } from "../../repositories/posts.repository";
-import { createErrorMessages } from "../../../../core/middlewares/validation/input-validation-result.middleware";
 import { URIParamsId } from "../../../../core/types/uri-params.type";
-import { blogsRepository } from "../../../blogs/repositories/blogs.repository";
-import { blogsService } from "../../../blogs/application/blogs.service";
 import { postsService } from "../../application/posts.service";
 
 export async function updatePostHandler(
@@ -24,3 +20,4 @@ export async function updatePostHandler(
     res.sendStatus(HttpStatus.NotFound);
   }
 }
+//! Обработка отсутствующих данных через null

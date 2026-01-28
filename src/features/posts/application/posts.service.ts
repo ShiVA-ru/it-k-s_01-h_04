@@ -4,8 +4,6 @@ import { PostDb } from "../types/posts.db.type";
 import { PostInput } from "../types/posts.input.type";
 import { postsRepository } from "../repositories/posts.repository";
 import { blogsService } from "../../blogs/application/blogs.service";
-import { PostSortFields } from "../validation/posts.query.validation.middleware";
-import { PaginationAndSorting } from "../../../core/types/pagination-and-sorting.type";
 import { PostsQueryInput } from "../types/posts.query.type";
 
 export const postsService = {
@@ -31,12 +29,12 @@ export const postsService = {
   },
 
   async findOneById(id: string): Promise<WithId<PostDb>> {
-    return postsRepository.findOneById(new ObjectId(id));
+    return postsRepository.findOneById(id);
   },
 
   async updateById(id: string, dto: PostInput): Promise<void> {
     const blogEntity = await blogsService.findOneById(dto.blogId);
-    await postsRepository.updateById(new ObjectId(id), {
+    await postsRepository.updateById(id, {
       ...dto,
       blogName: blogEntity.name,
     });
@@ -46,7 +44,7 @@ export const postsService = {
 
   async deleteById(id: string): Promise<void> {
     await blogsCollection.deleteOne({
-      _id: new ObjectId(id),
+      id,
     });
 
     return;

@@ -1,9 +1,6 @@
 import { ObjectId, WithId } from "mongodb";
 import { PostDb } from "../types/posts.db.type";
-import { PostInput } from "../types/posts.input.type";
 import { postsCollection } from "../../../db/mongo";
-import { PaginationAndSorting } from "../../../core/types/pagination-and-sorting.type";
-import { PostSortFields } from "../validation/posts.query.validation.middleware";
 import { PostsQueryInput } from "../types/posts.query.type";
 
 export const postsRepository = {
@@ -20,7 +17,6 @@ export const postsRepository = {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
 
     const skip = (pageNumber - 1) * pageSize;
-
     const sort: Record<string, 1 | -1> = {
       [sortBy]: sortDirection === "asc" ? 1 : -1,
     };
@@ -40,8 +36,8 @@ export const postsRepository = {
     };
   },
 
-  async findOneById(_id: ObjectId): Promise<WithId<PostDb>> {
-    const res = await postsCollection.findOne({ _id });
+  async findOneById(id: string): Promise<WithId<PostDb>> {
+    const res = await postsCollection.findOne({ _id: new ObjectId(id) });
 
     if (!res) {
       throw new Error("Post not exist");
@@ -50,9 +46,9 @@ export const postsRepository = {
     return res;
   },
 
-  async updateById(_id: ObjectId, dto: PostDb): Promise<void> {
+  async updateById(id: string, dto: PostDb): Promise<void> {
     const updateResult = await postsCollection.updateOne(
-      { _id },
+      { _id: new ObjectId(id) },
       {
         $set: {
           title: dto.title,
@@ -71,9 +67,9 @@ export const postsRepository = {
     return;
   },
 
-  async deleteById(_id: ObjectId): Promise<void> {
+  async deleteById(id: string): Promise<void> {
     const deleteResult = await postsCollection.deleteOne({
-      _id,
+      _id: new ObjectId(id),
     });
 
     if (deleteResult.deletedCount < 1) {
@@ -95,3 +91,5 @@ export const postsRepository = {
     return;
   },
 };
+
+//! Обработка отсутствующих данных через null

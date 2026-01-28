@@ -20,3 +20,4 @@ export async function getPostHandler(
     res.sendStatus(HttpStatus.NotFound);
   }
 }
+//! Обработка отсутствующих данных через null

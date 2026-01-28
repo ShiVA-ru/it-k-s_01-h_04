@@ -5,8 +5,6 @@ import { HttpStatus } from "../../../../core/types/http-statuses.types";
 import { mapEntityToViewModel } from "../mappers/posts.entity-map";
 import { PostInput } from "../../types/posts.input.type";
 import { PostView } from "../../types/posts.view.type";
-import { postsRepository } from "../../repositories/posts.repository";
-import { blogsService } from "../../../blogs/application/blogs.service";
 import { postsService } from "../../application/posts.service";
 
 export async function createPostHandler(
@@ -23,3 +21,4 @@ export async function createPostHandler(
     res.sendStatus(HttpStatus.InternalServerError);
   }
 }
+//! Обработка отсутствующих данных через null
