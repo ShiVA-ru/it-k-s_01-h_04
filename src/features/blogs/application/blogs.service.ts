@@ -3,6 +3,7 @@ import { blogsCollection } from "../../../db/mongo";
 import { BlogDb } from "../types/blogs.db.type";
 import { BlogInput } from "../types/blogs.input.type";
 import { blogsRepository } from "../repositories/blogs.repository";
+import { BlogsQueryInput } from "../types/blogs.query.type";
 
 export const blogsService = {
   async create(dto: BlogInput): Promise<string> {
@@ -17,8 +18,10 @@ export const blogsService = {
     return blogsRepository.create(newEntity);
   },
 
-  async findAll(): Promise<WithId<BlogDb>[]> {
-    return blogsRepository.findAll();
+  async findAll(
+    queryDto: BlogsQueryInput,
+  ): Promise<{ items: WithId<BlogDb>[]; totalCount: number }> {
+    return blogsRepository.findAll(queryDto);
   },
 
   async findOneById(id: string): Promise<WithId<BlogDb>> {

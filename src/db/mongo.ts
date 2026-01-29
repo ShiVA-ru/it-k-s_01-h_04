@@ -32,26 +32,3 @@ export async function closeDB() {
     console.error("❌ Error closing database:", error);
   }
 }
-
-// export async function runDB(url: string): Promise<void> {
-//   client = new MongoClient(url);
-//   const db: Db = client.db(DBName);
-
-//   //Инициализация коллекций
-//   blogsCollection = db.collection<BlogMongoModel>(DBCollectionNames.BLOGS);
-//   postsCollection = db.collection<PostMongoModel>(DBCollectionNames.POSTS);
-
-//   try {
-//     await client.connect();
-//     await db.command({ ping: 1 });
-//     console.log(`✅ Connected to the database ${db.databaseName}`);
-//   } catch (e) {
-//     await client.close();
-//     throw new Error(`❌ Database not connected: ${e}`);
-//   }
-// }
-//
-// ssh -R 80:localhost:5001 serveo.net
-// https://serveo.net/
-// https://localhost.run/
-// https://ngrok.com/

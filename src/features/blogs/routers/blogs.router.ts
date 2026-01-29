@@ -8,6 +8,7 @@ import { blogInputDtoValidation } from "../validation/blogs.input-dto.validation
 import { idValidation } from "../../../core/middlewares/validation/params-id-validation.middleware";
 import { inputValidationResultMiddleware } from "../../../core/middlewares/validation/input-validation-result.middleware";
 import { superAdminGuardMiddleware } from "../../../auth/middlewares/super-admin.guard.middleware";
+import { paginationSortingSearchValidation } from "../validation/blogs.query.validation.middleware";
 
 export const blogsRouter = Router();
 
@@ -20,7 +21,12 @@ blogsRouter
     createBlogHandler,
   )
 
-  .get("/", getBlogListHandler)
+  .get(
+    "/",
+    paginationSortingSearchValidation,
+    inputValidationResultMiddleware,
+    getBlogListHandler,
+  )
 
   .get("/:id", idValidation, inputValidationResultMiddleware, getBlogHandler)
 

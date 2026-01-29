@@ -36,7 +36,7 @@ const sortDirectionValidation = query("sortDirection")
     `Sort direction must be one of: ${sortDirectionValues.join(", ")}`,
   );
 
-export const paginationAndSortingValidation = [
+export const paginationSortingValidation = [
   pageNumberValidation,
   pageSizeValidation,
   sortByValidation,

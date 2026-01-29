@@ -2,6 +2,8 @@ import { ObjectId, WithId } from "mongodb";
 import { blogsCollection } from "../../../db/mongo";
 import { BlogDb } from "../types/blogs.db.type";
 import { BlogInput } from "../types/blogs.input.type";
+import { BlogsQueryInput } from "../types/blogs.query.type";
+import { buildDbQueryOptions } from "../../../core/utils/build-db-query-options";
 
 export const blogsRepository = {
   async create(dto: BlogDb): Promise<string> {
@@ -10,8 +12,38 @@ export const blogsRepository = {
     return result.insertedId.toString();
   },
 
-  async findAll(): Promise<WithId<BlogDb>[]> {
-    return blogsCollection.find().toArray();
+  async findAll(queryDto: BlogsQueryInput): Promise<{
+    items: WithId<BlogDb>[];
+    totalCount: number;
+  }> {
+    // const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+
+    // const skip = (pageNumber - 1) * pageSize;
+    // const sort: Record<string, 1 | -1> = {
+    //   [sortBy]: sortDirection === "asc" ? 1 : -1,
+    // };
+
+    // const items = await blogsCollection
+    //   .find()
+    //   .skip(skip)
+    //   .limit(pageSize)
+    //   .sort(sort)
+    //   .toArray();
+    //
+    const { skip, limit, sort, filter } = buildDbQueryOptions(queryDto);
+    const items = await blogsCollection
+      .find(filter)
+      .skip(skip)
+      .limit(limit)
+      .sort(sort)
+      .toArray();
+
+    const totalCount = await blogsCollection.countDocuments(filter);
+
+    return {
+      items,
+      totalCount,
+    };
   },
 
   async findOneById(_id: ObjectId): Promise<WithId<BlogDb>> {

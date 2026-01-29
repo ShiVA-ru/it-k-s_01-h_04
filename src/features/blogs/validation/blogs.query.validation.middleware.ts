@@ -1,35 +1,15 @@
 import { query } from "express-validator";
-import { PaginationAndSorting } from "../../../core/types/pagination-and-sorting.type";
 import { SortDirection } from "../../../core/types/sort-direction.type";
+import { BlogSortFields } from "../types/blogs.sort-field.type";
 
 const DEFAULT_SEARCH_TERM = null;
-const DEFAULT_SORT_BY = "createdAt";
+const DEFAULT_SORT_BY = BlogSortFields.CREATED_AT;
 const DEFAULT_SORT_DIRECTION = SortDirection.Desc;
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 10;
 
-// export enum BlogSortFields {
-//   CREATED_AT = 'createdAt',
-//   NAME = 'name',
-// }
-export enum PostSortFields {
-  CREATED_AT = "createdAt",
-  TITLE = "title",
-  BLOG_NAME = "blogName",
-}
-
 const sortDirectionValues = Object.values(SortDirection);
-console.log(sortDirectionValues);
-
-const allowedSortFields = Object.values(PostSortFields);
-console.log(allowedSortFields);
-
-// export const paginationAndSortingDefault: PaginationAndSorting = {
-//   pageNumber: DEFAULT_PAGE_NUMBER,
-//   pageSize: DEFAULT_PAGE_SIZE,
-//   sortBy: DEFAULT_SORT_BY,
-//   sortDirection: DEFAULT_SORT_DIRECTION,
-// };
+const allowedSortFields = Object.values(BlogSortFields);
 
 const searchNameTermValidation = query("searchNameTerm")
   .trim()
@@ -52,20 +32,20 @@ const pageSizeValidation = query("pageSize")
   .toInt();
 
 const sortByValidation = query("sortBy")
-  .default(Object.values(PostSortFields)[0]) // Первое значение enum как дефолтное
-  .isIn(Object.values(allowedSortFields))
+  .default(DEFAULT_SORT_BY) // Первое значение enum как дефолтное
+  .isIn(allowedSortFields)
   .withMessage(
     `Invalid sort field. Allowed values: ${allowedSortFields.join(", ")}`,
   );
 
 const sortDirectionValidation = query("sortDirection")
   .default(DEFAULT_SORT_DIRECTION)
-  .isIn(Object.values(SortDirection))
+  .isIn(sortDirectionValues)
   .withMessage(
-    `Sort direction must be one of: ${Object.values(SortDirection).join(", ")}`,
+    `Sort direction must be one of: ${sortDirectionValues.join(", ")}`,
   );
 
-export const paginationAndSortingValidation = [
+export const paginationSortingSearchValidation = [
   searchNameTermValidation,
   pageNumberValidation,
   pageSizeValidation,

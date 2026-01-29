@@ -15,7 +15,6 @@ export async function getPostListHandler(
     const queryData = matchedData<PostsQueryInput>(req, {
       locations: ["query"],
     });
-    console.log("queryData", queryData);
 
     const { items, totalCount } = await postsService.findAll(queryData);
 

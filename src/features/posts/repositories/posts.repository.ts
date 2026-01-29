@@ -2,6 +2,7 @@ import { ObjectId, WithId } from "mongodb";
 import { PostDb } from "../types/posts.db.type";
 import { postsCollection } from "../../../db/mongo";
 import { PostsQueryInput } from "../types/posts.query.type";
+import { buildDbQueryOptions } from "../../../core/utils/build-db-query-options";
 
 export const postsRepository = {
   async create(dto: PostDb): Promise<string> {
@@ -14,21 +15,28 @@ export const postsRepository = {
     items: WithId<PostDb>[];
     totalCount: number;
   }> {
-    const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+    // const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+    const { skip, limit, sort, filter } = buildDbQueryOptions(queryDto);
 
-    const skip = (pageNumber - 1) * pageSize;
-    const sort: Record<string, 1 | -1> = {
-      [sortBy]: sortDirection === "asc" ? 1 : -1,
-    };
+    // const skip = (pageNumber - 1) * pageSize;
+    // const sort: Record<string, 1 | -1> = {
+    // [sortBy]: sortDirection === "asc" ? 1 : -1,
+    // };
+    // const items = await postsCollection
+    //   .find()
+    //   .skip(skip)
+    //   .limit(pageSize)
+    //   .sort(sort)
+    //   .toArray();
 
     const items = await postsCollection
-      .find()
+      .find(filter)
       .skip(skip)
-      .limit(pageSize)
+      .limit(limit)
       .sort(sort)
       .toArray();
 
-    const totalCount = await postsCollection.countDocuments();
+    const totalCount = await postsCollection.countDocuments(filter);
 
     return {
       items,

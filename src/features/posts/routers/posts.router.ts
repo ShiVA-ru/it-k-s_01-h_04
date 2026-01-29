@@ -8,7 +8,7 @@ import { idValidation } from "../../../core/middlewares/validation/params-id-val
 import { inputValidationResultMiddleware } from "../../../core/middlewares/validation/input-validation-result.middleware";
 import { postInputDtoValidation } from "../validation/posts.input-dto.validation.middleware";
 import { superAdminGuardMiddleware } from "../../../auth/middlewares/super-admin.guard.middleware";
-import { paginationAndSortingValidation } from "../validation/posts.query.validation.middleware";
+import { paginationSortingValidation } from "../validation/posts.query.validation.middleware";
 
 export const PostsRouter = Router();
 
@@ -26,7 +26,7 @@ PostsRouter
   //READ
   .get(
     "/",
-    paginationAndSortingValidation,
+    paginationSortingValidation,
     inputValidationResultMiddleware,
     getPostListHandler,
   )

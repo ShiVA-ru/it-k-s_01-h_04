@@ -1,5 +1,4 @@
 import { body } from "express-validator";
-import { URL_REGEX } from "../../../core/constants";
 
 const titleValidation = body("title")
   .trim()
@@ -37,13 +36,3 @@ export const postInputDtoValidation = [
   contentValidation,
   blogIdValidation,
 ];
-
-// export enum BlogSortFields {
-//   CREATED_AT = 'createdAt',
-//   NAME = 'name',
-// }
-// export enum PostSortFields {
-//   CREATED_AT = 'createdAt',
-//   TITLE = 'title',
-//   BLOG_NAME = 'blogName',
-// }
