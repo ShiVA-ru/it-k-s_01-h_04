@@ -9,6 +9,15 @@ import { idValidation } from "../../../core/middlewares/validation/params-id-val
 import { inputValidationResultMiddleware } from "../../../core/middlewares/validation/input-validation-result.middleware";
 import { superAdminGuardMiddleware } from "../../../auth/middlewares/super-admin.guard.middleware";
 import { paginationSortingSearchValidation } from "../validation/blogs.query.validation.middleware";
+import { paginationSortingValidation } from "../../posts/validation/posts.query.validation.middleware";
+import { getPostListHandler } from "../../posts/routers/handlers/posts.get-list.handler";
+import { getBlogPostsListHandler } from "./handlers/blogs-posts.get-list.handler";
+import {
+  blogPostInputDtoValidation,
+  postInputDtoValidation,
+} from "../../posts/validation/posts.input-dto.validation.middleware";
+import { createPostHandler } from "../../posts/routers/handlers/posts.create.handler";
+import { createBlogPostHandler } from "./handlers/blogs-posts.create.handler";
 
 export const blogsRouter = Router();
 
@@ -45,4 +54,20 @@ blogsRouter
     idValidation,
     inputValidationResultMiddleware,
     deleteBlogHandler,
+  )
+
+  .get(
+    "/:id/posts",
+    paginationSortingValidation,
+    inputValidationResultMiddleware,
+    getBlogPostsListHandler,
+  )
+
+  .post(
+    "/:id/posts",
+    superAdminGuardMiddleware,
+    idValidation,
+    blogPostInputDtoValidation,
+    inputValidationResultMiddleware,
+    createBlogPostHandler,
   );

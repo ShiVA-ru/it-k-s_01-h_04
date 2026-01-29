@@ -7,6 +7,7 @@ import { matchedData } from "express-validator";
 import { BlogsQueryInput } from "../../types/blogs.query.type";
 import { mapBlogsToPaginatedView } from "../mappers/blogs.entity-list-map";
 import { Paginator } from "../../../../core/types/paginator.type";
+import { PostsQueryInput } from "../../../posts/types/posts.query.type";
 
 export async function getBlogListHandler(
   req: Request,

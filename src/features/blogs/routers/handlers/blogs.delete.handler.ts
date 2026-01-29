@@ -9,7 +9,12 @@ export async function deleteBlogHandler(
   res: Response,
 ) {
   try {
-    await blogsService.deleteById(req.params.id);
+    const isDeleted = await blogsService.deleteById(req.params.id);
+
+    if (!isDeleted) {
+      res.sendStatus(HttpStatus.NotFound);
+      return;
+    }
 
     return res.sendStatus(HttpStatus.NoContent);
   } catch (error) {

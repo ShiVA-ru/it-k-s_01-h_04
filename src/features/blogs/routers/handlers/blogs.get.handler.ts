@@ -14,6 +14,10 @@ export async function getBlogHandler(
   try {
     const findEntity = await blogsService.findOneById(req.params.id);
 
+    if (!findEntity) {
+      return res.sendStatus(HttpStatus.NotFound);
+    }
+
     res.status(HttpStatus.Ok).json(mapEntityToViewModel(findEntity));
   } catch (error) {
     console.log(error);

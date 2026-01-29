@@ -16,20 +16,6 @@ export const blogsRepository = {
     items: WithId<BlogDb>[];
     totalCount: number;
   }> {
-    // const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
-
-    // const skip = (pageNumber - 1) * pageSize;
-    // const sort: Record<string, 1 | -1> = {
-    //   [sortBy]: sortDirection === "asc" ? 1 : -1,
-    // };
-
-    // const items = await blogsCollection
-    //   .find()
-    //   .skip(skip)
-    //   .limit(pageSize)
-    //   .sort(sort)
-    //   .toArray();
-    //
     const { skip, limit, sort, filter } = buildDbQueryOptions(queryDto);
     const items = await blogsCollection
       .find(filter)
@@ -46,17 +32,17 @@ export const blogsRepository = {
     };
   },
 
-  async findOneById(_id: ObjectId): Promise<WithId<BlogDb>> {
+  async findOneById(_id: ObjectId): Promise<WithId<BlogDb> | null> {
     const res = await blogsCollection.findOne({ _id });
 
     if (!res) {
-      throw new Error("Blog not found");
+      return null;
     }
 
     return res;
   },
 
-  async updateById(id: ObjectId, dto: BlogInput): Promise<void> {
+  async updateById(id: ObjectId, dto: BlogInput): Promise<Boolean> {
     const updateResult = await blogsCollection.updateOne(
       { _id: new ObjectId(id) },
       {
@@ -69,21 +55,21 @@ export const blogsRepository = {
     );
 
     if (updateResult.matchedCount < 1) {
-      throw new Error("Blog not found");
+      return false;
     }
 
-    return;
+    return true;
   },
 
-  async deleteById(_id: ObjectId): Promise<void> {
+  async deleteById(id: string): Promise<Boolean> {
     const deleteResult = await blogsCollection.deleteOne({
-      _id,
+      _id: new ObjectId(id),
     });
 
     if (deleteResult.deletedCount < 1) {
-      throw new Error("Blog not exist");
+      return false;
     }
 
-    return;
+    return true;
   },
 };

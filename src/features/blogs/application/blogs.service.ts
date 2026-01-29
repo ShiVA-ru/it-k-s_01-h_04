@@ -24,21 +24,15 @@ export const blogsService = {
     return blogsRepository.findAll(queryDto);
   },
 
-  async findOneById(id: string): Promise<WithId<BlogDb>> {
+  async findOneById(id: string): Promise<WithId<BlogDb> | null> {
     return blogsRepository.findOneById(new ObjectId(id));
   },
 
-  async updateById(id: string, dto: BlogInput): Promise<void> {
-    await blogsRepository.updateById(new ObjectId(id), dto);
-
-    return;
+  async updateById(id: string, dto: BlogInput): Promise<Boolean> {
+    return await blogsRepository.updateById(new ObjectId(id), dto);
   },
 
-  async deleteById(id: string): Promise<void> {
-    await blogsCollection.deleteOne({
-      _id: new ObjectId(id),
-    });
-
-    return;
+  async deleteById(id: string): Promise<Boolean> {
+    return await blogsRepository.deleteById(id);
   },
 };

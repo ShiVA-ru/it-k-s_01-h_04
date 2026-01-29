@@ -12,7 +12,11 @@ export async function updatePostHandler(
   res: Response<PostView | validationErrorsDto>,
 ) {
   try {
-    await postsService.updateById(req.params.id, req.body);
+    const isUpdated = await postsService.updateById(req.params.id, req.body);
+    console.log(isUpdated);
+    if (!isUpdated) {
+      return res.sendStatus(HttpStatus.NotFound);
+    }
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
@@ -20,4 +24,3 @@ export async function updatePostHandler(
     res.sendStatus(HttpStatus.NotFound);
   }
 }
-//! Обработка отсутствующих данных через null

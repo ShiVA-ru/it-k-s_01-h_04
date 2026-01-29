@@ -16,6 +16,10 @@ export async function createBlogHandler(
 
     const createdEntity = await blogsService.findOneById(insertedId);
 
+    if (!createdEntity) {
+      return res.sendStatus(HttpStatus.NotFound);
+    }
+
     res.status(HttpStatus.Created).json(mapEntityToViewModel(createdEntity));
   } catch (error) {
     console.error(error);

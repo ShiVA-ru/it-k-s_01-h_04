@@ -14,6 +14,10 @@ export async function getPostHandler(
   try {
     const findEntity = await postsService.findOneById(req.params.id);
 
+    if (!findEntity) {
+      return res.sendStatus(HttpStatus.NotFound);
+    }
+
     return res.status(HttpStatus.Ok).json(mapEntityToViewModel(findEntity));
   } catch (error) {
     console.log(error);

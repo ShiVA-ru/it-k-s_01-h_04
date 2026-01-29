@@ -12,7 +12,12 @@ export async function updateBlogHandler(
   res: Response<BlogView | validationErrorsDto>,
 ) {
   try {
-    await blogsService.updateById(req.params.id, req.body);
+    const isUpdated = await blogsService.updateById(req.params.id, req.body);
+
+    if (!isUpdated) {
+      res.sendStatus(HttpStatus.NotFound);
+      return;
+    }
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (error) {

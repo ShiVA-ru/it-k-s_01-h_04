@@ -1,5 +1,4 @@
 import { WithId } from "mongodb";
-import { blogsCollection } from "../../../db/mongo";
 import { PostDb } from "../types/posts.db.type";
 import { PostInput } from "../types/posts.input.type";
 import { postsRepository } from "../repositories/posts.repository";
@@ -7,8 +6,12 @@ import { blogsService } from "../../blogs/application/blogs.service";
 import { PostsQueryInput } from "../types/posts.query.type";
 
 export const postsService = {
-  async create(dto: PostInput): Promise<string> {
+  async create(dto: PostInput): Promise<string | null> {
     const blogEntity = await blogsService.findOneById(dto.blogId);
+
+    if (!blogEntity) {
+      return null;
+    }
 
     const newEntity: PostDb = {
       title: dto.title,
@@ -28,25 +31,43 @@ export const postsService = {
     return postsRepository.findAll(queryDto);
   },
 
-  async findOneById(id: string): Promise<WithId<PostDb>> {
+  async findOneById(id: string): Promise<WithId<PostDb> | null> {
     return postsRepository.findOneById(id);
   },
 
-  async updateById(id: string, dto: PostInput): Promise<void> {
+  async updateById(id: string, dto: PostInput): Promise<Boolean> {
     const blogEntity = await blogsService.findOneById(dto.blogId);
-    await postsRepository.updateById(id, {
+
+    if (!blogEntity) {
+      return false;
+    }
+
+    const isUpdated = await postsRepository.updateById(id, {
       ...dto,
       blogName: blogEntity.name,
     });
 
-    return;
+    if (!isUpdated) {
+      return false;
+    }
+
+    return true;
   },
 
-  async deleteById(id: string): Promise<void> {
-    await blogsCollection.deleteOne({
-      id,
-    });
+  async deleteById(id: string): Promise<Boolean> {
+    return await postsRepository.deleteById(id);
+  },
 
-    return;
+  async findPostByBlogId(
+    blogId: string,
+    queryDto: PostsQueryInput,
+  ): Promise<{ items: WithId<PostDb>[]; totalCount: number } | null> {
+    const blogEntity = await blogsService.findOneById(blogId);
+
+    if (!blogEntity) {
+      return null;
+    }
+
+    return postsRepository.findByBlogId(blogId, queryDto);
   },
 };

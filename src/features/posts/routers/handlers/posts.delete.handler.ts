@@ -9,7 +9,11 @@ export async function deletePostHandler(
   res: Response,
 ) {
   try {
-    await postsService.deleteById(req.params.id);
+    const isDeleted = await postsService.deleteById(req.params.id);
+
+    if (!isDeleted) {
+      return res.sendStatus(HttpStatus.NotFound);
+    }
 
     return res.sendStatus(HttpStatus.NoContent);
   } catch (error) {

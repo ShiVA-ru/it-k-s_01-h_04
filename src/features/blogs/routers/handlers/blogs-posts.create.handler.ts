@@ -1,20 +1,28 @@
 import { Response } from "express";
-import { RequestWithBody } from "../../../../core/types/request.types";
+import { RequestWithParamsAndBody } from "../../../../core/types/request.types";
 import { validationErrorsDto } from "../../../../core/types/errors.types";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
-import { mapEntityToViewModel } from "../mappers/posts.entity-map";
-import { PostInput } from "../../types/posts.input.type";
-import { PostView } from "../../types/posts.view.type";
-import { postsService } from "../../application/posts.service";
+import { BlogPostInput } from "../../../posts/types/blogs-posts.input.type";
+import { PostView } from "../../../posts/types/posts.view.type";
+import { postsService } from "../../../posts/application/posts.service";
+import { URIParamsId } from "../../../../core/types/uri-params.type";
+import { mapEntityToViewModel } from "../../../posts/routers/mappers/posts.entity-map";
 
-export async function createPostHandler(
-  req: RequestWithBody<PostInput>,
+export async function createBlogPostHandler(
+  req: RequestWithParamsAndBody<URIParamsId, BlogPostInput>,
   res: Response<PostView | validationErrorsDto>,
 ) {
   try {
-    const insertedId = await postsService.create(req.body);
+    const blogId = req.params.id;
+    const insertedId = await postsService.create({
+      blogId,
+      title: req.body.title,
+      shortDescription: req.body.shortDescription,
+      content: req.body.content,
+    });
 
     console.log("createPostHandler", insertedId);
+
     if (!insertedId) {
       return res.sendStatus(HttpStatus.NotFound);
     }

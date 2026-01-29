@@ -15,19 +15,7 @@ export const postsRepository = {
     items: WithId<PostDb>[];
     totalCount: number;
   }> {
-    // const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
     const { skip, limit, sort, filter } = buildDbQueryOptions(queryDto);
-
-    // const skip = (pageNumber - 1) * pageSize;
-    // const sort: Record<string, 1 | -1> = {
-    // [sortBy]: sortDirection === "asc" ? 1 : -1,
-    // };
-    // const items = await postsCollection
-    //   .find()
-    //   .skip(skip)
-    //   .limit(pageSize)
-    //   .sort(sort)
-    //   .toArray();
 
     const items = await postsCollection
       .find(filter)
@@ -44,17 +32,17 @@ export const postsRepository = {
     };
   },
 
-  async findOneById(id: string): Promise<WithId<PostDb>> {
+  async findOneById(id: string): Promise<WithId<PostDb> | null> {
     const res = await postsCollection.findOne({ _id: new ObjectId(id) });
 
     if (!res) {
-      throw new Error("Post not exist");
+      return null;
     }
 
     return res;
   },
 
-  async updateById(id: string, dto: PostDb): Promise<void> {
+  async updateById(id: string, dto: PostDb): Promise<Boolean> {
     const updateResult = await postsCollection.updateOne(
       { _id: new ObjectId(id) },
       {
@@ -69,22 +57,24 @@ export const postsRepository = {
     );
 
     if (updateResult.matchedCount < 1) {
-      throw new Error("Blog not found");
+      return false;
     }
 
-    return;
+    return true;
   },
 
-  async deleteById(id: string): Promise<void> {
+  async deleteById(id: string): Promise<Boolean> {
     const deleteResult = await postsCollection.deleteOne({
       _id: new ObjectId(id),
     });
 
+    console.log("deleteResult.deletedCount", deleteResult.deletedCount);
+
     if (deleteResult.deletedCount < 1) {
-      throw new Error("Post not exist");
+      return false;
     }
 
-    return;
+    return true;
   },
 
   async deleteByBlogId(blogId: string): Promise<void> {
@@ -97,6 +87,33 @@ export const postsRepository = {
     }
 
     return;
+  },
+
+  async findByBlogId(
+    blogId: string,
+    queryDto: PostsQueryInput,
+  ): Promise<{
+    items: WithId<PostDb>[];
+    totalCount: number;
+  }> {
+    // const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+    const { skip, limit, sort } = buildDbQueryOptions(queryDto);
+
+    const filter = { blogId: blogId };
+
+    const items = await postsCollection
+      .find(filter)
+      .skip(skip)
+      .limit(limit)
+      .sort(sort)
+      .toArray();
+
+    const totalCount = await postsCollection.countDocuments(filter);
+
+    return {
+      items,
+      totalCount,
+    };
   },
 };
 
