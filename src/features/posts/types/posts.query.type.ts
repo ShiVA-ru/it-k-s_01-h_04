@@ -1,5 +1,5 @@
 import { PaginationAndSorting } from "../../../core/types/pagination-and-sorting.type";
-import { PostSortFields } from "../validation/posts.query.validation.middleware";
+import { PostSortFields } from "./posts.sort-field.type";
 
-export type PostsQueryInput = PaginationAndSorting;
-// export type PostsQueryInput = PaginationAndSorting<PostSortFields>;
+// export type PostsQueryInput = PaginationAndSorting;
+export type PostsQueryInput = PaginationAndSorting<PostSortFields>;

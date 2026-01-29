@@ -17,12 +17,12 @@ const DEFAULT_PAGE_SIZE = 10;
 //   BLOG_NAME = 'blogName',
 // }
 
-export const paginationAndSortingDefault: PaginationAndSorting = {
-  pageNumber: DEFAULT_PAGE_NUMBER,
-  pageSize: DEFAULT_PAGE_SIZE,
-  sortBy: DEFAULT_SORT_BY,
-  sortDirection: DEFAULT_SORT_DIRECTION,
-};
+// export const paginationAndSortingDefault: PaginationAndSorting<T> = {
+//   pageNumber: DEFAULT_PAGE_NUMBER,
+//   pageSize: DEFAULT_PAGE_SIZE,
+//   sortBy: DEFAULT_SORT_BY,
+//   sortDirection: DEFAULT_SORT_DIRECTION,
+// };
 
 export function paginationAndSortingValidation(
   sortFieldsEnum: Record<string, string>,

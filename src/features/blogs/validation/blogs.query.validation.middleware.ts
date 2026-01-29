@@ -24,12 +24,12 @@ console.log(sortDirectionValues);
 const allowedSortFields = Object.values(PostSortFields);
 console.log(allowedSortFields);
 
-export const paginationAndSortingDefault: PaginationAndSorting = {
-  pageNumber: DEFAULT_PAGE_NUMBER,
-  pageSize: DEFAULT_PAGE_SIZE,
-  sortBy: DEFAULT_SORT_BY,
-  sortDirection: DEFAULT_SORT_DIRECTION,
-};
+// export const paginationAndSortingDefault: PaginationAndSorting = {
+//   pageNumber: DEFAULT_PAGE_NUMBER,
+//   pageSize: DEFAULT_PAGE_SIZE,
+//   sortBy: DEFAULT_SORT_BY,
+//   sortDirection: DEFAULT_SORT_DIRECTION,
+// };
 
 const searchNameTermValidation = query("searchNameTerm")
   .trim()

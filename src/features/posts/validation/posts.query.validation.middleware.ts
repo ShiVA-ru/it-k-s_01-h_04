@@ -1,28 +1,14 @@
 import { query } from "express-validator";
-import { PaginationAndSorting } from "../../../core/types/pagination-and-sorting.type";
 import { SortDirection } from "../../../core/types/sort-direction.type";
+import { PostSortFields } from "../types/posts.sort-field.type";
 
-const DEFAULT_SORT_BY = "createdAt";
+const DEFAULT_SORT_BY = PostSortFields.CREATED_AT;
 const DEFAULT_SORT_DIRECTION = SortDirection.Desc;
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 10;
 
-export enum PostSortFields {
-  CREATED_AT = "createdAt",
-  TITLE = "title",
-  BLOG_NAME = "blogName",
-}
-
 const sortDirectionValues = Object.values(SortDirection);
-
 const allowedSortFields = Object.values(PostSortFields);
-
-export const paginationAndSortingDefault: PaginationAndSorting = {
-  pageNumber: DEFAULT_PAGE_NUMBER,
-  pageSize: DEFAULT_PAGE_SIZE,
-  sortBy: DEFAULT_SORT_BY,
-  sortDirection: DEFAULT_SORT_DIRECTION,
-};
 
 const pageNumberValidation = query("pageNumber")
   .default(DEFAULT_PAGE_NUMBER)
@@ -37,7 +23,7 @@ const pageSizeValidation = query("pageSize")
   .toInt();
 
 const sortByValidation = query("sortBy")
-  .default(allowedSortFields[0]) // Первое значение enum как дефолтное
+  .default(DEFAULT_SORT_BY) // Первое значение enum как дефолтное
   .isIn(allowedSortFields)
   .withMessage(
     `Invalid sort field. Allowed values: ${allowedSortFields.join(", ")}`,
