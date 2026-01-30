@@ -14,7 +14,6 @@ export async function createPostHandler(
   try {
     const insertedId = await postsService.create(req.body);
 
-    console.log("createPostHandler", insertedId);
     if (!insertedId) {
       return res.sendStatus(HttpStatus.NotFound);
     }
@@ -27,8 +26,7 @@ export async function createPostHandler(
 
     res.status(HttpStatus.Created).json(mapEntityToViewModel(createdEntity));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.InternalServerError);
   }
 }
-//! Обработка отсутствующих данных через null

@@ -20,8 +20,7 @@ export async function getPostHandler(
 
     return res.status(HttpStatus.Ok).json(mapEntityToViewModel(findEntity));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.NotFound);
   }
 }
-//! Обработка отсутствующих данных через null

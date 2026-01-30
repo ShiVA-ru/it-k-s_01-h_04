@@ -32,7 +32,7 @@ export async function getBlogPostsListHandler(
     });
     res.status(HttpStatus.Ok).json(postsListOutput);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.InternalServerError);
   }
 }

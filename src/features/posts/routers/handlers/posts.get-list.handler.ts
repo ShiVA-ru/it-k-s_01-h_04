@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
+import { mapEntityToViewModel } from "../mappers/posts.entity-map";
 import { PostView } from "../../types/posts.view.type";
+import { postsRepository } from "../../repositories/posts.repository";
 import { matchedData } from "express-validator";
 import { postsService } from "../../application/posts.service";
 import { PostsQueryInput } from "../../types/posts.query.type";
@@ -25,9 +27,7 @@ export async function getPostListHandler(
     });
     res.status(HttpStatus.Ok).json(postsListOutput);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.InternalServerError);
   }
 }
-
-//! Обработка отсутствующих данных через null

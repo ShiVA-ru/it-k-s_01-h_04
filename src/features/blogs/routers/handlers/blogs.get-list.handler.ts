@@ -27,7 +27,7 @@ export async function getBlogListHandler(
     });
     res.status(HttpStatus.Ok).json(blogsListOutput);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.InternalServerError);
   }
 }

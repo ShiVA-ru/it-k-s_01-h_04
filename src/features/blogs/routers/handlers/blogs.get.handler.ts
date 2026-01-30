@@ -20,7 +20,7 @@ export async function getBlogHandler(
 
     res.status(HttpStatus.Ok).json(mapEntityToViewModel(findEntity));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.NotFound);
   }
 }

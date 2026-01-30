@@ -18,7 +18,7 @@ export async function deleteBlogHandler(
 
     return res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.NotFound);
   }
 }

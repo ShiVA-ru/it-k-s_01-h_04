@@ -9,18 +9,20 @@ import { postsService } from "../../application/posts.service";
 
 export async function updatePostHandler(
   req: RequestWithParamsAndBody<URIParamsId, PostInput>,
-  res: Response<PostView | validationErrorsDto>,
+  res: Response<PostView | validationErrorsDto | { message: string }>,
 ) {
   try {
-    const isUpdated = await postsService.updateById(req.params.id, req.body);
-    console.log(isUpdated);
-    if (!isUpdated) {
-      return res.sendStatus(HttpStatus.NotFound);
+    const updateStatus = await postsService.updateById(req.params.id, req.body);
+
+    if (updateStatus.notFound) {
+      return res
+        .status(HttpStatus.NotFound)
+        .send({ message: `${updateStatus.entity} not found` });
     }
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
-    console.log(error);
-    res.sendStatus(HttpStatus.NotFound);
+    console.error(error);
+    res.sendStatus(HttpStatus.InternalServerError);
   }
 }

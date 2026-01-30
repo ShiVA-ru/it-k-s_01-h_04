@@ -35,11 +35,14 @@ export const postsService = {
     return postsRepository.findOneById(id);
   },
 
-  async updateById(id: string, dto: PostInput): Promise<Boolean> {
+  async updateById(
+    id: string,
+    dto: PostInput,
+  ): Promise<{ notFound: boolean; entity: "post" | "blog" | null }> {
     const blogEntity = await blogsService.findOneById(dto.blogId);
 
     if (!blogEntity) {
-      return false;
+      return { notFound: true, entity: "blog" };
     }
 
     const isUpdated = await postsRepository.updateById(id, {
@@ -48,10 +51,10 @@ export const postsService = {
     });
 
     if (!isUpdated) {
-      return false;
+      return { notFound: true, entity: "post" };
     }
 
-    return true;
+    return { notFound: false, entity: null };
   },
 
   async deleteById(id: string): Promise<Boolean> {

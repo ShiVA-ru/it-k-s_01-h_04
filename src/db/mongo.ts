@@ -19,6 +19,7 @@ export async function runDB(url: string) {
     await db.command({ ping: 1 });
     console.log("✅ Connected to the database");
   } catch (error) {
+    console.error(error);
     await client.close();
     throw new Error(`❌ Database not connected: ${error}`);
   }

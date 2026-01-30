@@ -17,9 +17,7 @@ export async function deletePostHandler(
 
     return res.sendStatus(HttpStatus.NoContent);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.NotFound);
   }
 }
-
-//! Обработка отсутствующих данных через null

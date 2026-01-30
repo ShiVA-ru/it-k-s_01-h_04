@@ -24,11 +24,5 @@ export async function createBlogHandler(
   } catch (error) {
     console.error(error);
     res.sendStatus(HttpStatus.InternalServerError);
-    // res.status(HttpStatus.InternalServerError).json(
-    //   createErrorMessages({
-    //     field: "message",
-    //     message: "Internal Server Error",
-    //   }),
-    // );
   }
 }

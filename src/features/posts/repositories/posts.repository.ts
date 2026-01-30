@@ -68,8 +68,6 @@ export const postsRepository = {
       _id: new ObjectId(id),
     });
 
-    console.log("deleteResult.deletedCount", deleteResult.deletedCount);
-
     if (deleteResult.deletedCount < 1) {
       return false;
     }
@@ -116,5 +114,3 @@ export const postsRepository = {
     };
   },
 };
-
-//! Обработка отсутствующих данных через null

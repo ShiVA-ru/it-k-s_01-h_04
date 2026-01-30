@@ -21,8 +21,6 @@ export async function createBlogPostHandler(
       content: req.body.content,
     });
 
-    console.log("createPostHandler", insertedId);
-
     if (!insertedId) {
       return res.sendStatus(HttpStatus.NotFound);
     }
@@ -35,8 +33,7 @@ export async function createBlogPostHandler(
 
     res.status(HttpStatus.Created).json(mapEntityToViewModel(createdEntity));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(HttpStatus.InternalServerError);
   }
 }
-//! Обработка отсутствующих данных через null
